@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card - Il Signore degli Anelli</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      margin-top: 40px;
+      padding: 20px;
+      max-width: 300px;
+      text-align: center;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .card h2 {
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Il Signore degli Anelli - Carta Personaggio</h1>
+
+  <div class="card">
+    <img id="character-img" src="" alt="Card Image">
+    <h2 id="character-name"></h2>
+  </div>
+
+  <script>
+    async function getCard() {
+      try {
+        // ✅ URL dell’API ufficiale di RingsDB (JSON con tutte le carte)
+        const response = await fetch("https://ringsdb.com/api/public/cards/");
+        const cards = await response.json();
+
+        // ✅ Filtra solo le carte di tipo "hero" (eroi giocabili)
+        const heroes = cards.filter(card => card.type_name === "Hero");
+
+        // ✅ Scegli una carta casuale tra gli eroi
+        const randomHero = heroes[Math.floor(Math.random() * heroes.length)];
+
+        // ✅ Inserisci i dati nella pagina
+        const cardName = document.getElementById("character-name");
+        const cardImg = document.getElementById("character-img");
+
+        cardName.textContent = randomHero.name;
+        // Attenzione: l’URL dell’immagine va completato con il dominio ringsdb.com
+        cardImg.src = `https://ringsdb.com${randomHero.imagesrc}`;
+        cardImg.alt = randomHero.name;
+
+      } catch (error) {
+        console.error("Errore durante il fetch:", error);
+      }
+    }
+
+    // Esegui la funzione al caricamento della pagina
+    getCard();
+  </script>
+</body>
+</html>
