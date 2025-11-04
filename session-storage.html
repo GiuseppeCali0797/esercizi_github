@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            max-width: 300px;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        /* Tolto il punto e virgola finale errato dopo } */
+    </style>
+</head>
+<body>
+    <h1>Il form di <span class="title-name"></span></h1>
+    <div class="form">
+        <label for="email">Email</label>
+        <input type="email" name="email" class="email" placeholder="email">
+
+        <label for="firstname">Name</label>
+        <input type="text" name="firstname" class="firstname" placeholder="firstname">
+
+        <label for="lastname">Surname</label>
+        <input type="text" name="lastname" class="lastname" placeholder="lastname">
+    </div>
+
+    <button class="btn">Salva</button>
+    <p class="printedform"></p>
+
+    <script>
+        const button = document.querySelector(".btn");
+        const titleName = document.querySelector(".title-name");
+        const printedForm = document.querySelector(".printedform");
+
+        // ✅ Se esistono dati salvati nel sessionStorage, li carichiamo all'avvio
+        window.addEventListener("load", () => {
+            const savedPerson = sessionStorage.getItem("person");
+            if (savedPerson) {
+                const person = JSON.parse(savedPerson);
+                document.querySelector(".email").value = person.email;
+                document.querySelector(".firstname").value = person.firstname;
+                document.querySelector(".lastname").value = person.lastname;
+
+                titleName.textContent = person.firstname;
+                printedForm.textContent = `Email: ${person.email} | Nome: ${person.firstname} | Cognome: ${person.lastname}`;
+            }
+        });
+
+        // ✅ Quando clicco su "Salva"
+        button.addEventListener("click", () => {
+            const email = document.querySelector(".email").value.trim();
+            const firstname = document.querySelector(".firstname").value.trim();
+            const lastname = document.querySelector(".lastname").value.trim();
+
+            if (!email || !firstname || !lastname) {
+                alert("Compila tutti i campi prima di salvare!");
+                return;
+            }
+
+            // Creo l'oggetto person
+            const person = {
+                email,
+                firstname,
+                lastname
+            };
+
+            // Aggiorno lo span col nome
+            titleName.textContent = firstname;
+
+            // Stampo i dati in fondo alla pagina
+            printedForm.textContent = `Email: ${email} | Nome: ${firstname} | Cognome: ${lastname}`;
+
+            // ✅ Salvo nel sessionStorage come JSON
+            sessionStorage.setItem("person", JSON.stringify(person));
+
+            alert("Dati salvati correttamente nella sessione!");
+        });
+    </script>
+</body>
+</html>
